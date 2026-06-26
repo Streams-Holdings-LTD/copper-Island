@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop — Copper Island Collectables</title>
+  <meta name="description" content="Browse all 3D printing products — printers, filaments, resin, miniatures, parts, and tools at wholesale prices.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏝️</text></svg>">
+  <style>
+    .mobile-filter-btn {
+      display: none; padding: 10px 18px; background: var(--blue-dark); color: var(--white);
+      border: none; border-radius: var(--radius-sm); font-size: 0.875rem; font-weight: 600;
+      cursor: pointer; margin-bottom: 16px;
+    }
+    @media (max-width: 768px) { .mobile-filter-btn { display: flex; align-items: center; gap: 8px; } }
+  </style>
+</head>
+<body>
+
+<div id="header-mount"></div>
+
+<!-- Page Hero -->
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>›</span>
+      <span class="current" id="breadcrumb-current">Shop</span>
+    </div>
+    <h1 id="page-title">All Products</h1>
+    <p id="page-desc">Browse our full range of 3D printing supplies from vetted Canadian brands</p>
+  </div>
+</section>
+
+<!-- Main Shop Layout -->
+<div class="container">
+  <div class="shop-layout">
+
+    <!-- Sidebar Filters -->
+    <aside class="filter-sidebar" id="filter-sidebar">
+      <h3>Filters</h3>
+
+      <!-- Category -->
+      <div class="filter-group">
+        <h4>Category</h4>
+        <div id="cat-filters"></div>
+      </div>
+
+      <!-- Brand -->
+      <div class="filter-group">
+        <h4>Brand</h4>
+        <div id="brand-filters"></div>
+      </div>
+
+      <!-- Price Range -->
+      <div class="filter-group">
+        <h4>Price Range</h4>
+        <div class="price-range">
+          <input type="range" id="price-max" min="10" max="700" value="700" step="5"
+            oninput="document.getElementById('price-max-label').textContent = '$'+this.value; filterProducts()">
+          <div class="price-labels">
+            <span>$0</span>
+            <span id="price-max-label">$700</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rating -->
+      <div class="filter-group">
+        <h4>Minimum Rating</h4>
+        <div id="rating-filters"></div>
+      </div>
+
+      <!-- Stock -->
+      <div class="filter-group">
+        <h4>Availability</h4>
+        <label class="filter-option">
+          <input type="checkbox" id="filter-instock" onchange="filterProducts()">
+          <label>In Stock Only</label>
+        </label>
+      </div>
+
+      <button class="btn btn-outline btn-full btn-sm" onclick="clearFilters()" style="margin-top:8px">Clear All Filters</button>
+    </aside>
+
+    <!-- Product Grid -->
+    <main class="shop-main">
+      <button class="mobile-filter-btn" onclick="toggleMobileFilters()">⚙️ Filters</button>
+
+      <div class="active-filters" id="active-filters"></div>
+
+      <div class="shop-toolbar">
+        <div class="results-count"><span id="results-count">0</span> products</div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <label style="font-size:0.82rem;color:var(--gray-500)">Sort by:</label>
+          <select class="sort-select" id="sort-select" onchange="filterProducts()">
+            <option value="featured">Featured</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="rating">Top Rated</option>
+            <option value="newest">Newest First</option>
+            <option value="name">Name A–Z</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="products-grid" id="products-grid">
+        <div style="text-align:center;padding:60px;grid-column:1/-1;color:var(--gray-400)">Loading products…</div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination" id="pagination"></div>
+    </main>
+
+  </div>
+</div>
+
+<div id="footer-mount"></div>
+<div id="modal-mount"></div>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  initPage('shop');
+
+  const PAGE_SIZE = 12;
+  let currentPage = 1;
+  let activeCat = getParam('cat') || '';
+  let activeSearch = getParam('search') || '';
+  let activeFilter = getParam('filter') || '';
+
+  // Populate category filters
+  document.getElementById('cat-filters').innerHTML = CATEGORIES.map(c => `
+    <label class="filter-option">
+      <input type="checkbox" class="filter-cat" value="${c.id}" ${activeCat === c.id ? 'checked' : ''} onchange="filterProducts()">
+      <label>${c.name}</label>
+      <span class="count">${c.count}</span>
+    </label>
+  `).join('');
+
+  // Populate brand filters
+  document.getElementById('brand-filters').innerHTML = BRANDS.map(b => `
+    <label class="filter-option">
+      <input type="checkbox" class="filter-brand" value="${b.id}" onchange="filterProducts()">
+      <label>${b.name}</label>
+      <span class="count">${b.productCount}</span>
+    </label>
+  `).join('');
+
+  // Populate rating filters
+  document.getElementById('rating-filters').innerHTML = [4.5, 4.0, 3.5].map(r => `
+    <label class="filter-option">
+      <input type="radio" name="min-rating" value="${r}" onchange="filterProducts()">
+      <label>${'★'.repeat(Math.floor(r))}${'½'.repeat(r % 1 >= 0.5 ? 1 : 0)} & up</label>
+    </label>
+  `).join('');
+
+  // Update hero text
+  if (activeCat) {
+    const cat = CATEGORIES.find(c => c.id === activeCat);
+    if (cat) {
+      document.getElementById('page-title').textContent = cat.name;
+      document.getElementById('page-desc').textContent = cat.desc;
+      document.getElementById('breadcrumb-current').textContent = cat.name;
+      document.title = `${cat.name} — Copper Island Collectables`;
+    }
+  } else if (activeSearch) {
+    document.getElementById('page-title').textContent = `Search: "${activeSearch}"`;
+    document.getElementById('breadcrumb-current').textContent = 'Search Results';
+  } else if (activeFilter === 'new') {
+    document.getElementById('page-title').textContent = 'New Arrivals';
+    document.getElementById('breadcrumb-current').textContent = 'New Arrivals';
+  }
+
+  function getSelectedValues(selector) {
+    return Array.from(document.querySelectorAll(`${selector}:checked`)).map(el => el.value);
+  }
+
+  function filterProducts() {
+    currentPage = 1;
+    renderProducts();
+  }
+
+  function renderProducts() {
+    const selectedCats   = getSelectedValues('.filter-cat');
+    const selectedBrands = getSelectedValues('.filter-brand');
+    const maxPrice       = parseFloat(document.getElementById('price-max').value);
+    const minRatingEl    = document.querySelector('[name="min-rating"]:checked');
+    const minRating      = minRatingEl ? parseFloat(minRatingEl.value) : 0;
+    const inStockOnly    = document.getElementById('filter-instock').checked;
+    const sortVal        = document.getElementById('sort-select').value;
+
+    let products = [...PRODUCTS];
+
+    // Pre-filters from URL
+    if (activeCat && selectedCats.length === 0) products = products.filter(p => p.category === activeCat);
+    if (activeSearch) {
+      const q = activeSearch.toLowerCase();
+      products = products.filter(p =>
+        p.name.toLowerCase().includes(q) || p.brand.toLowerCase().includes(q) ||
+        p.categoryName.toLowerCase().includes(q) || (p.tags && p.tags.join(' ').toLowerCase().includes(q))
+      );
+    }
+    if (activeFilter === 'new') products = products.filter(p => p.isNew);
+
+    // Sidebar filters
+    if (selectedCats.length   > 0) products = products.filter(p => selectedCats.includes(p.category));
+    if (selectedBrands.length > 0) products = products.filter(p => selectedBrands.includes(String(p.brandId)));
+    products = products.filter(p => p.wholesalePrice <= maxPrice);
+    if (minRating > 0) products = products.filter(p => p.rating >= minRating);
+    if (inStockOnly) products = products.filter(p => p.inStock);
+
+    // Sort
+    switch (sortVal) {
+      case 'price-asc':  products.sort((a, b) => a.wholesalePrice - b.wholesalePrice); break;
+      case 'price-desc': products.sort((a, b) => b.wholesalePrice - a.wholesalePrice); break;
+      case 'rating':     products.sort((a, b) => b.rating - a.rating); break;
+      case 'newest':     products.sort((a, b) => (b.isNew ? 1 : 0) - (a.isNew ? 1 : 0)); break;
+      case 'name':       products.sort((a, b) => a.name.localeCompare(b.name)); break;
+      default:           products.sort((a, b) => (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0)); break;
+    }
+
+    // Count
+    document.getElementById('results-count').textContent = products.length;
+
+    // Pagination
+    const totalPages = Math.ceil(products.length / PAGE_SIZE);
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const paged = products.slice(start, start + PAGE_SIZE);
+
+    // Render
+    const grid = document.getElementById('products-grid');
+    if (paged.length === 0) {
+      grid.innerHTML = `<div style="text-align:center;padding:80px;grid-column:1/-1">
+        <div style="font-size:3rem;margin-bottom:16px">🔍</div>
+        <h3 style="color:var(--blue-dark);margin-bottom:8px">No products found</h3>
+        <p style="color:var(--gray-400)">Try adjusting your filters or <button onclick="clearFilters()" style="background:none;border:none;color:var(--blue-mid);cursor:pointer;font-weight:600">clearing all filters</button></p>
+      </div>`;
+    } else {
+      grid.innerHTML = paged.map(renderProductCard).join('');
+    }
+
+    // Pagination buttons
+    const paginationEl = document.getElementById('pagination');
+    if (totalPages <= 1) { paginationEl.innerHTML = ''; return; }
+    let pageHTML = '';
+    if (currentPage > 1) pageHTML += `<button class="page-btn" onclick="goToPage(${currentPage - 1})">‹</button>`;
+    for (let i = 1; i <= totalPages; i++) {
+      if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 1) {
+        pageHTML += `<button class="page-btn${i === currentPage ? ' active' : ''}" onclick="goToPage(${i})">${i}</button>`;
+      } else if (Math.abs(i - currentPage) === 2) {
+        pageHTML += `<span style="padding:0 4px;color:var(--gray-400)">…</span>`;
+      }
+    }
+    if (currentPage < totalPages) pageHTML += `<button class="page-btn" onclick="goToPage(${currentPage + 1})">›</button>`;
+    paginationEl.innerHTML = pageHTML;
+
+    // Active filter tags
+    renderActiveTags(selectedCats, selectedBrands, maxPrice, minRating, inStockOnly);
+  }
+
+  function goToPage(n) {
+    currentPage = n;
+    renderProducts();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function renderActiveTags(cats, brands, maxPrice, minRating, inStock) {
+    const tags = [];
+    cats.forEach(c => {
+      const cat = CATEGORIES.find(x => x.id === c);
+      if (cat) tags.push({ label: cat.name, action: () => { document.querySelector(`.filter-cat[value="${c}"]`).checked = false; filterProducts(); } });
+    });
+    brands.forEach(b => {
+      const brand = BRANDS.find(x => x.id === parseInt(b));
+      if (brand) tags.push({ label: brand.name, action: () => { document.querySelector(`.filter-brand[value="${b}"]`).checked = false; filterProducts(); } });
+    });
+    if (maxPrice < 700) tags.push({ label: `Under $${maxPrice}`, action: () => { document.getElementById('price-max').value = 700; document.getElementById('price-max-label').textContent = '$700'; filterProducts(); } });
+    if (minRating > 0) tags.push({ label: `${minRating}★+`, action: () => { document.querySelector('[name="min-rating"]:checked').checked = false; filterProducts(); } });
+    if (inStock) tags.push({ label: 'In Stock', action: () => { document.getElementById('filter-instock').checked = false; filterProducts(); } });
+
+    document.getElementById('active-filters').innerHTML = tags.map((t, i) =>
+      `<div class="filter-tag">${t.label} <button onclick="activeFilterActions[${i}]()">✕</button></div>`
+    ).join('');
+    window.activeFilterActions = tags.map(t => t.action);
+  }
+
+  function clearFilters() {
+    document.querySelectorAll('.filter-cat, .filter-brand').forEach(cb => cb.checked = false);
+    document.getElementById('price-max').value = 700;
+    document.getElementById('price-max-label').textContent = '$700';
+    const ratingChecked = document.querySelector('[name="min-rating"]:checked');
+    if (ratingChecked) ratingChecked.checked = false;
+    document.getElementById('filter-instock').checked = false;
+    activeCat = ''; activeSearch = ''; activeFilter = '';
+    filterProducts();
+  }
+
+  function toggleMobileFilters() {
+    const sidebar = document.getElementById('filter-sidebar');
+    sidebar.classList.toggle('open');
+  }
+
+  // Initial render
+  renderProducts();
+</script>
+</body>
+</html>

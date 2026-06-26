@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brands Directory — Copper Island Collectables</title>
+  <meta name="description" content="Discover all 3D printing brands on Copper Island Collectables. Browse by category, rating, and specialty.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏝️</text></svg>">
+  <style>
+    .brands-page-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+    .brand-list-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--gray-200);
+      overflow: hidden;
+      transition: all var(--transition);
+      box-shadow: var(--shadow-xs);
+      text-decoration: none;
+      display: block;
+    }
+    .brand-list-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--copper-light);
+    }
+    .brand-list-cover {
+      height: 120px;
+      overflow: hidden;
+      position: relative;
+    }
+    .brand-list-cover img {
+      width: 100%; height: 100%; object-fit: cover;
+    }
+    .brand-list-body {
+      padding: 20px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .brand-list-logo {
+      width: 56px; height: 56px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--blue-dark), var(--blue-mid));
+      color: var(--white);
+      font-family: var(--font-heading);
+      font-size: 1.3rem; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: -44px;
+      border: 3px solid var(--white);
+      box-shadow: var(--shadow-sm);
+    }
+    .brand-list-info { flex: 1; }
+    .brand-list-name { font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; color: var(--blue-dark); margin-bottom: 4px; }
+    .brand-list-cat { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--copper); margin-bottom: 6px; }
+    .brand-list-tagline { font-size: 0.82rem; color: var(--gray-500); line-height: 1.5; margin-bottom: 10px; }
+    .brand-list-meta { display: flex; gap: 14px; flex-wrap: wrap; font-size: 0.75rem; color: var(--gray-400); }
+    .brand-search-bar {
+      display: flex; gap: 12px; margin-bottom: 32px; flex-wrap: wrap;
+    }
+    .brand-search-input {
+      flex: 1; min-width: 240px;
+      padding: 11px 16px; border: 1.5px solid var(--gray-300);
+      border-radius: var(--radius-full); font-size: 0.9rem;
+      outline: none; transition: border-color var(--transition);
+    }
+    .brand-search-input:focus { border-color: var(--copper); }
+    .cat-filter-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px; }
+    .cat-pill {
+      padding: 7px 18px; border-radius: var(--radius-full);
+      border: 1.5px solid var(--gray-300); background: var(--white);
+      font-size: 0.82rem; font-weight: 500; color: var(--gray-600);
+      cursor: pointer; transition: all var(--transition);
+    }
+    .cat-pill:hover, .cat-pill.active {
+      background: var(--blue-dark); border-color: var(--blue-dark); color: var(--white);
+    }
+  </style>
+</head>
+<body>
+
+<div id="header-mount"></div>
+
+<!-- Page Hero -->
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a><span>›</span>
+      <span class="current">Brands</span>
+    </div>
+    <h1>Brand Directory</h1>
+    <p>Discover vetted Canadian 3D printing brands — from filament makers to miniature studios</p>
+  </div>
+</section>
+
+<!-- Brands Section -->
+<section style="padding:48px 0 80px;background:var(--blue-bg)">
+  <div class="container">
+
+    <!-- Stats Bar -->
+    <div style="display:flex;gap:32px;flex-wrap:wrap;margin-bottom:40px;padding:20px 24px;background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--gray-200)">
+      <div><span style="font-size:1.5rem;font-weight:700;font-family:var(--font-heading);color:var(--blue-dark)">7</span> <span style="font-size:0.85rem;color:var(--gray-400)">Brands</span></div>
+      <div><span style="font-size:1.5rem;font-weight:700;font-family:var(--font-heading);color:var(--blue-dark)">500+</span> <span style="font-size:0.85rem;color:var(--gray-400)">Products</span></div>
+      <div><span style="font-size:1.5rem;font-weight:700;font-family:var(--font-heading);color:var(--blue-dark)">4.8</span> <span style="font-size:0.85rem;color:var(--gray-400)">Avg Rating</span></div>
+      <div style="margin-left:auto;display:flex;align-items:center"><button class="btn btn-copper btn-sm" onclick="openModal()">Apply to Sell on CIC →</button></div>
+    </div>
+
+    <!-- Search + Sort -->
+    <div class="brand-search-bar">
+      <input type="text" class="brand-search-input" id="brand-search"
+        placeholder="🔍 Search brands…" oninput="filterBrands()">
+      <select class="sort-select" id="brand-sort" onchange="filterBrands()" style="padding-right:36px">
+        <option value="default">Sort: Default</option>
+        <option value="rating">Top Rated</option>
+        <option value="products">Most Products</option>
+        <option value="name">Name A–Z</option>
+        <option value="newest">Newest</option>
+      </select>
+    </div>
+
+    <!-- Category Pills -->
+    <div class="cat-filter-pills" id="cat-pills">
+      <button class="cat-pill active" data-cat="" onclick="setCatFilter('',this)">All Categories</button>
+    </div>
+
+    <!-- Results count -->
+    <div style="margin-bottom:20px;font-size:0.875rem;color:var(--gray-500)">
+      Showing <span id="brand-count" style="font-weight:600;color:var(--gray-800)">0</span> brands
+    </div>
+
+    <!-- Grid -->
+    <div class="brands-page-grid" id="brands-grid"></div>
+
+    <!-- Empty State -->
+    <div id="brands-empty" style="display:none;text-align:center;padding:80px">
+      <div style="font-size:3rem;margin-bottom:16px">🔍</div>
+      <h3 style="color:var(--blue-dark);margin-bottom:8px">No brands found</h3>
+      <p style="color:var(--gray-400)">Try a different search term or category filter</p>
+    </div>
+
+    <!-- Become a Seller CTA -->
+    <div style="margin-top:64px;background:linear-gradient(135deg,var(--blue-dark),#243f6e);border-radius:var(--radius-xl);padding:48px;text-align:center;color:var(--white)">
+      <div style="font-size:2.5rem;margin-bottom:16px">🏪</div>
+      <h2 style="color:var(--white);margin-bottom:12px">Sell Your Products on Copper Island</h2>
+      <p style="color:rgba(255,255,255,0.7);max-width:520px;margin:0 auto 28px">Join our growing community of Canadian 3D printing brands. Reach wholesale buyers, grow your revenue, and build your brand — all in one platform.</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap">
+        <button class="btn btn-copper btn-lg" onclick="openModal()">Apply to Become a Seller</button>
+        <a href="about.html" class="btn btn-lg" style="background:rgba(255,255,255,0.1);color:var(--white);border:1.5px solid rgba(255,255,255,0.3)">Learn More</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="footer-mount"></div>
+<div id="modal-mount"></div>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  initPage('brands');
+
+  // Build category pills
+  const brandCats = [...new Set(BRANDS.map(b => b.category))];
+  const pillsEl = document.getElementById('cat-pills');
+  brandCats.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-pill';
+    btn.dataset.cat = cat;
+    btn.textContent = cat;
+    btn.onclick = () => setCatFilter(cat, btn);
+    pillsEl.appendChild(btn);
+  });
+
+  let activeCatFilter = '';
+
+  function setCatFilter(cat, el) {
+    activeCatFilter = cat;
+    document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    filterBrands();
+  }
+
+  function filterBrands() {
+    const q    = document.getElementById('brand-search').value.toLowerCase();
+    const sort = document.getElementById('brand-sort').value;
+    let   list = [...BRANDS];
+
+    if (activeCatFilter) list = list.filter(b => b.category === activeCatFilter);
+    if (q) list = list.filter(b =>
+      b.name.toLowerCase().includes(q) ||
+      b.category.toLowerCase().includes(q) ||
+      b.location.toLowerCase().includes(q) ||
+      b.tagline.toLowerCase().includes(q) ||
+      b.tags.join(' ').toLowerCase().includes(q)
+    );
+
+    switch (sort) {
+      case 'rating':   list.sort((a, b) => b.rating - a.rating); break;
+      case 'products': list.sort((a, b) => b.productCount - a.productCount); break;
+      case 'name':     list.sort((a, b) => a.name.localeCompare(b.name)); break;
+      case 'newest':   list.sort((a, b) => b.founded - a.founded); break;
+    }
+
+    document.getElementById('brand-count').textContent = list.length;
+
+    const grid = document.getElementById('brands-grid');
+    const empty = document.getElementById('brands-empty');
+
+    if (list.length === 0) {
+      grid.innerHTML = '';
+      empty.style.display = 'block';
+    } else {
+      empty.style.display = 'none';
+      grid.innerHTML = list.map(brand => {
+        const prodCount = PRODUCTS.filter(p => p.brandId === brand.id).length;
+        return `
+          <a href="brand.html?id=${brand.id}" class="brand-list-card">
+            <div class="brand-list-cover">
+              <img src="${brand.cover}" alt="${brand.name}" loading="lazy"
+                onerror="this.src='https://picsum.photos/seed/bcover${brand.id}/800/300'">
+            </div>
+            <div class="brand-list-body">
+              <div class="brand-list-logo">${brand.name.charAt(0)}</div>
+              <div class="brand-list-info">
+                <div class="brand-list-cat">${brand.category}</div>
+                <div class="brand-list-name">${brand.name}</div>
+                <div class="brand-list-tagline">${brand.tagline}</div>
+                <div class="brand-list-meta">
+                  <span>📍 ${brand.location}</span>
+                  <span>⭐ ${brand.rating} (${brand.reviewCount})</span>
+                  <span>📦 ${prodCount} products</span>
+                  <span>🏷️ Min ${brand.minOrder}</span>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:10px">
+                  ${brand.tags.slice(0,3).map(t => `<span class="chip" style="font-size:.7rem">${t}</span>`).join('')}
+                </div>
+              </div>
+            </div>
+          </a>
+        `;
+      }).join('');
+    }
+  }
+
+  // Initial render
+  filterBrands();
+</script>
+</body>
+</html>

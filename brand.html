@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Brand — Copper Island Collectables</title>
+  <meta name="description" content="View brand profile, products, and reviews on Copper Island Collectables.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏝️</text></svg>">
+</head>
+<body>
+
+<div id="header-mount"></div>
+<div id="brand-mount"></div>
+<div id="footer-mount"></div>
+<div id="modal-mount"></div>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  initPage('brands');
+
+  const brandId = getParam('id');
+  const brand   = getBrandById(brandId);
+  const mount   = document.getElementById('brand-mount');
+
+  if (!brand) {
+    mount.innerHTML = `
+      <div style="text-align:center;padding:80px;max-width:500px;margin:0 auto">
+        <div style="font-size:4rem;margin-bottom:16px">😕</div>
+        <h2>Brand Not Found</h2>
+        <p style="margin:12px 0 24px">We couldn't find that brand.</p>
+        <a href="brands.html" class="btn btn-primary">Browse All Brands</a>
+      </div>
+    `;
+  } else {
+    document.title = `${brand.name} — Copper Island Collectables`;
+    const products = getProductsByBrand(brand.id);
+
+    mount.innerHTML = `
+      <!-- Brand Hero -->
+      <div class="brand-hero">
+        <div class="brand-hero-cover">
+          <img src="${brand.cover}" alt="${brand.name}" onerror="this.src='https://picsum.photos/seed/brand${brand.id}/1200/300'">
+        </div>
+        <div class="brand-hero-overlay"></div>
+        <div class="brand-hero-content container-wide">
+          <div class="brand-logo-large">${brand.name.charAt(0)}</div>
+          <div class="brand-hero-info">
+            <div class="breadcrumb" style="margin-bottom:8px">
+              <a href="index.html">Home</a><span>›</span>
+              <a href="brands.html">Brands</a><span>›</span>
+              <span class="current">${brand.name}</span>
+            </div>
+            <h1>${brand.name}</h1>
+            <div class="brand-hero-meta">
+              <span>📍 ${brand.location}</span>
+              <span>⭐ ${brand.rating} (${brand.reviewCount} reviews)</span>
+              <span>📦 ${products.length} products</span>
+              <span>🏷️ Min. order ${brand.minOrder}</span>
+              <span>📅 Est. ${brand.founded}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Brand Content -->
+      <div class="brand-content">
+        <div class="container-wide">
+          <div class="brand-content-grid">
+
+            <!-- Products -->
+            <div class="brand-products">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
+                <h2 style="font-size:1.5rem">${brand.name}'s Products</h2>
+                <select class="sort-select" id="brand-sort" onchange="sortBrandProducts()">
+                  <option value="default">Sort: Featured</option>
+                  <option value="price-asc">Price: Low → High</option>
+                  <option value="price-desc">Price: High → Low</option>
+                  <option value="rating">Top Rated</option>
+                </select>
+              </div>
+              <div class="products-grid" id="brand-products-grid">
+                ${products.map(renderProductCard).join('')}
+              </div>
+              ${products.length === 0 ? `<div style="text-align:center;padding:60px;color:var(--gray-400)">No products listed yet.</div>` : ''}
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="brand-sidebar">
+              <h3>About ${brand.name}</h3>
+              <p style="font-size:0.875rem;color:var(--gray-600);line-height:1.7;margin-bottom:20px">${brand.about}</p>
+
+              <div class="stat-grid">
+                <div class="stat-item">
+                  <div class="stat-num">${brand.rating}</div>
+                  <div class="stat-lbl">Avg Rating</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-num">${brand.reviewCount}</div>
+                  <div class="stat-lbl">Reviews</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-num">${products.length}</div>
+                  <div class="stat-lbl">Products</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-num">${brand.founded}</div>
+                  <div class="stat-lbl">Founded</div>
+                </div>
+              </div>
+
+              <div style="margin-bottom:20px">
+                <h3 style="font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray-500);margin-bottom:10px">Location</h3>
+                <p style="font-size:0.875rem;color:var(--gray-600)">📍 ${brand.location}</p>
+              </div>
+
+              <div style="margin-bottom:20px">
+                <h3 style="font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray-500);margin-bottom:10px">Specialties</h3>
+                <div style="display:flex;flex-wrap:wrap;gap:6px">
+                  ${brand.tags.map(t => `<span class="chip">${t}</span>`).join('')}
+                </div>
+              </div>
+
+              ${brand.certifications.length ? `
+                <div style="margin-bottom:20px">
+                  <h3 style="font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray-500);margin-bottom:10px">Certifications</h3>
+                  <div style="display:flex;flex-wrap:wrap;gap:6px">
+                    ${brand.certifications.map(c => `<span class="badge badge-blue">✓ ${c}</span>`).join('')}
+                  </div>
+                </div>
+              ` : ''}
+
+              <div style="margin-bottom:20px">
+                <h3 style="font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--gray-500);margin-bottom:10px">Minimum Order</h3>
+                <p style="font-size:0.875rem;color:var(--gray-600)">${brand.minOrder}</p>
+              </div>
+
+              <button class="btn btn-copper btn-full" onclick="openModal()">Contact Brand</button>
+              <button class="btn btn-outline btn-full" style="margin-top:10px" onclick="showToast('${brand.name} saved to favourites!','success')">♡ Save Brand</button>
+            </aside>
+
+          </div>
+        </div>
+      </div>
+    `;
+
+    window.brandProducts = products;
+
+    function sortBrandProducts() {
+      const val = document.getElementById('brand-sort').value;
+      let sorted = [...brandProducts];
+      if (val === 'price-asc')  sorted.sort((a, b) => a.wholesalePrice - b.wholesalePrice);
+      if (val === 'price-desc') sorted.sort((a, b) => b.wholesalePrice - a.wholesalePrice);
+      if (val === 'rating')     sorted.sort((a, b) => b.rating - a.rating);
+      document.getElementById('brand-products-grid').innerHTML = sorted.map(renderProductCard).join('');
+    }
+    window.sortBrandProducts = sortBrandProducts;
+  }
+</script>
+</body>
+</html>

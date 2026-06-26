@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product — Copper Island Collectables</title>
+  <meta name="description" content="View product details, specs, and reviews on Copper Island Collectables.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏝️</text></svg>">
+</head>
+<body>
+
+<div id="header-mount"></div>
+
+<div class="product-detail container" id="product-mount">
+  <div style="text-align:center;padding:80px;color:var(--gray-400)">Loading product…</div>
+</div>
+
+<div id="footer-mount"></div>
+<div id="modal-mount"></div>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  initPage('shop');
+
+  const productId = getParam('id');
+  const product   = getProductById(productId);
+  const mount     = document.getElementById('product-mount');
+
+  if (!product) {
+    mount.innerHTML = `
+      <div style="text-align:center;padding:80px">
+        <div style="font-size:4rem;margin-bottom:16px">😕</div>
+        <h2>Product Not Found</h2>
+        <p style="margin:12px 0 24px">We couldn't find that product.</p>
+        <a href="category.html" class="btn btn-primary">Browse All Products</a>
+      </div>
+    `;
+  } else {
+    document.title = `${product.name} — Copper Island Collectables`;
+
+    const brand = getBrandById(product.brandId);
+    const related = PRODUCTS.filter(p => p.category === product.category && p.id !== product.id).slice(0, 4);
+
+    let selectedVariant = product.variants?.[0] || '';
+    let selectedQty = product.minOrder || 1;
+
+    // Build tabs content
+    const descTab = `
+      <div class="tab-content active" id="tab-description">
+        <p style="font-size:1rem;line-height:1.8;color:var(--gray-700)">${product.desc}</p>
+        ${product.tags ? `<div style="margin-top:20px;display:flex;flex-wrap:wrap;gap:8px">${product.tags.map(t => `<span class="chip">${t}</span>`).join('')}</div>` : ''}
+      </div>
+    `;
+    const specsTab = `
+      <div class="tab-content" id="tab-specs">
+        <table class="spec-table">
+          ${Object.entries(product.specs || {}).map(([k, v]) => `<tr><td>${k}</td><td>${v}</td></tr>`).join('')}
+        </table>
+      </div>
+    `;
+    const reviewsTab = `
+      <div class="tab-content" id="tab-reviews">
+        <div style="display:flex;align-items:center;gap:24px;margin-bottom:28px;padding:24px;background:var(--blue-bg);border-radius:var(--radius-lg)">
+          <div style="text-align:center">
+            <div style="font-size:3rem;font-weight:700;font-family:var(--font-heading);color:var(--blue-dark)">${product.rating}</div>
+            <div style="color:var(--orange);font-size:1.2rem">${renderStars(product.rating)}</div>
+            <div style="font-size:0.8rem;color:var(--gray-400);margin-top:4px">${product.reviewCount} reviews</div>
+          </div>
+          <div style="flex:1">
+            ${[5,4,3,2,1].map(n => {
+              const count = Math.round((n / 15) * product.reviewCount);
+              const pct   = Math.round((count / product.reviewCount) * 100);
+              return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:0.8rem">
+                <span>${n}★</span>
+                <div style="flex:1;height:8px;background:var(--gray-200);border-radius:4px;overflow:hidden">
+                  <div style="width:${pct}%;height:100%;background:var(--orange);border-radius:4px"></div>
+                </div>
+                <span style="color:var(--gray-400);width:28px">${pct}%</span>
+              </div>`;
+            }).join('')}
+          </div>
+        </div>
+        ${(product.reviews || []).map(r => `
+          <div class="review-item">
+            <div class="review-header">
+              <div>
+                <div class="reviewer-name">${r.name}</div>
+                <div style="color:var(--orange);font-size:0.8rem">${'★'.repeat(r.rating)}</div>
+              </div>
+              <div class="review-date">${r.date}</div>
+            </div>
+            <p class="review-text">${r.text}</p>
+          </div>
+        `).join('') || '<p style="color:var(--gray-400)">No reviews yet — be the first!</p>'}
+        <div style="margin-top:24px;padding:20px;background:var(--gray-50);border-radius:var(--radius);border:1px solid var(--gray-200)">
+          <h4 style="margin-bottom:12px">Write a Review</h4>
+          <textarea style="width:100%;padding:12px;border:1.5px solid var(--gray-300);border-radius:var(--radius-sm);font-family:inherit;font-size:0.875rem;resize:vertical;min-height:80px;outline:none" placeholder="Share your experience with this product…"></textarea>
+          <button class="btn btn-copper btn-sm" style="margin-top:10px" onclick="showToast('Thank you for your review!','success')">Submit Review</button>
+        </div>
+      </div>
+    `;
+
+    const variantsHTML = product.variants?.length ? `
+      <div class="product-variants">
+        <div class="variant-label">Variant: <strong id="variant-selected">${product.variants[0]}</strong></div>
+        <div class="variant-options">
+          ${product.variants.map((v, i) => `
+            <button class="variant-btn${i === 0 ? ' active' : ''}" onclick="selectVariant('${v}', this)">${v}</button>
+          `).join('')}
+        </div>
+      </div>
+    ` : '';
+
+    mount.innerHTML = `
+      <!-- Breadcrumb -->
+      <div class="breadcrumb" style="padding:24px 0 8px">
+        <a href="index.html">Home</a> <span>›</span>
+        <a href="category.html">Shop</a> <span>›</span>
+        <a href="category.html?cat=${product.category}">${product.categoryName}</a> <span>›</span>
+        <span class="current">${product.name}</span>
+      </div>
+
+      <!-- Product Grid -->
+      <div class="product-detail-grid">
+
+        <!-- Gallery -->
+        <div class="product-gallery">
+          <div class="main-image">
+            <img src="${product.images[0]}" alt="${product.name}" id="main-img"
+              onerror="this.src='https://picsum.photos/seed/${product.id}/700/520'">
+          </div>
+          <div class="thumb-strip">
+            ${product.images.map((img, i) => `
+              <div class="thumb${i === 0 ? ' active' : ''}" onclick="switchImage('${img}', this)">
+                <img src="${img}" alt="View ${i+1}" onerror="this.src='https://picsum.photos/seed/${product.id}${i}/600/450'">
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <!-- Info -->
+        <div class="product-info">
+          <div class="product-info-brand">
+            <a href="brand.html?id=${product.brandId}" style="color:var(--copper)">${product.brand}</a>
+          </div>
+          <h1>${product.name}</h1>
+          <div class="product-info-rating">
+            <span class="stars" style="font-size:1rem">${renderStars(product.rating)}</span>
+            <span class="rating-text">${product.rating} (${product.reviewCount} reviews)</span>
+            ${product.inStock ? '<span class="badge badge-orange" style="margin-left:8px">✓ In Stock</span>' : '<span class="badge" style="background:#fee;color:#c00">Out of Stock</span>'}
+          </div>
+
+          <div class="pricing-block">
+            <div class="pricing-row">
+              <span class="price-main">${formatPrice(product.wholesalePrice)}</span>
+              <span class="price-original">${formatPrice(product.retailPrice)}</span>
+              <span class="price-save">Save ${Math.round((1 - product.wholesalePrice / product.retailPrice) * 100)}%</span>
+            </div>
+            <div class="pricing-note">Wholesale price · Min. order: ${product.minOrder} unit${product.minOrder > 1 ? 's' : ''} · Taxes calculated at checkout</div>
+          </div>
+
+          ${variantsHTML}
+
+          <div class="qty-cart">
+            <div class="qty-control">
+              <button onclick="adjustQty(-1)">−</button>
+              <input type="number" id="qty-input" value="${product.minOrder}" min="${product.minOrder}" step="1" onchange="selectedQty = parseInt(this.value)||${product.minOrder}">
+              <button onclick="adjustQty(1)">+</button>
+            </div>
+            <button class="btn btn-primary" onclick="doAddToCart()" style="flex:1">🛒 Add to Cart</button>
+            <button class="btn btn-outline-copper" onclick="toggleWishlist(${product.id})" data-wish="${product.id}">🤍</button>
+          </div>
+
+          <div class="product-meta">
+            <div class="meta-row"><span class="meta-label">SKU</span><span class="meta-value">${product.sku}</span></div>
+            <div class="meta-row"><span class="meta-label">Category</span><span class="meta-value"><a href="category.html?cat=${product.category}" style="color:var(--blue-mid)">${product.categoryName}</a></span></div>
+            <div class="meta-row"><span class="meta-label">Brand</span><span class="meta-value"><a href="brand.html?id=${product.brandId}" style="color:var(--blue-mid)">${product.brand}</a></span></div>
+            ${product.tags ? `<div class="meta-row"><span class="meta-label">Tags</span><span class="meta-value">${product.tags.join(', ')}</span></div>` : ''}
+          </div>
+
+          <div style="background:var(--gray-50);border-radius:var(--radius);padding:16px;font-size:0.82rem;color:var(--gray-500);display:flex;flex-direction:column;gap:8px;border:1px solid var(--gray-200)">
+            <div>📦 Free shipping on orders over <strong>$150</strong></div>
+            <div>🔄 30-day returns on eligible products</div>
+            <div>💳 Net-30 terms available for qualified accounts</div>
+            <div>🇨🇦 Ships from Canada — fast domestic delivery</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div style="margin-bottom:40px">
+        <div class="product-tabs">
+          <button class="product-tab active" onclick="switchTab('description', this)">Description</button>
+          <button class="product-tab" onclick="switchTab('specs', this)">Specifications</button>
+          <button class="product-tab" onclick="switchTab('reviews', this)">Reviews (${product.reviewCount})</button>
+        </div>
+        ${descTab}
+        ${specsTab}
+        ${reviewsTab}
+      </div>
+
+      <!-- Related Products -->
+      ${related.length ? `
+        <div style="margin-bottom:64px">
+          <div class="section-header" style="margin-bottom:24px">
+            <div>
+              <div class="section-eyebrow">More Like This</div>
+              <h2 class="section-title">Related Products</h2>
+            </div>
+            <a href="category.html?cat=${product.category}" class="see-all-link">See all →</a>
+          </div>
+          <div class="products-grid">${related.map(renderProductCard).join('')}</div>
+        </div>
+      ` : ''}
+    `;
+
+    // Attach wishlist state
+    const wl = getWishlist();
+    document.querySelectorAll(`[data-wish="${product.id}"]`).forEach(btn => {
+      if (wl.includes(product.id)) { btn.textContent = '❤️'; btn.style.color = 'var(--orange)'; }
+    });
+  }
+
+  function switchImage(src, el) {
+    document.getElementById('main-img').src = src;
+    document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function switchTab(tab, el) {
+    document.querySelectorAll('.product-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById(`tab-${tab}`).classList.add('active');
+  }
+
+  function selectVariant(v, el) {
+    selectedVariant = v;
+    document.getElementById('variant-selected').textContent = v;
+    document.querySelectorAll('.variant-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function adjustQty(delta) {
+    const input = document.getElementById('qty-input');
+    const minO  = product ? (product.minOrder || 1) : 1;
+    const newQty = Math.max(minO, (parseInt(input.value) || minO) + delta);
+    input.value = newQty;
+    selectedQty = newQty;
+  }
+
+  function doAddToCart() {
+    if (!product) return;
+    addToCart(product.id, selectedQty, selectedVariant);
+  }
+</script>
+</body>
+</html>

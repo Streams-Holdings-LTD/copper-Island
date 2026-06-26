@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cart — Copper Island Collectables</title>
+  <meta name="description" content="Your shopping cart at Copper Island Collectables.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏝️</text></svg>">
+</head>
+<body>
+
+<div id="header-mount"></div>
+
+<!-- Page Hero -->
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a><span>›</span>
+      <span class="current">Your Cart</span>
+    </div>
+    <h1>Your Cart</h1>
+    <p id="cart-hero-desc">Review your items and proceed to checkout</p>
+  </div>
+</section>
+
+<!-- Cart -->
+<div class="container cart-page">
+  <div id="cart-mount"></div>
+</div>
+
+<!-- Recently Viewed / Suggested -->
+<section style="background:var(--blue-bg);padding:64px 0">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <div class="section-eyebrow">Don't Miss Out</div>
+        <h2 class="section-title">You Might Also Like</h2>
+      </div>
+      <a href="category.html" class="see-all-link">Browse all →</a>
+    </div>
+    <div class="products-grid" id="suggested-grid"></div>
+  </div>
+</section>
+
+<div id="footer-mount"></div>
+<div id="modal-mount"></div>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  initPage('');
+
+  function renderCart() {
+    const cart  = getCart();
+    const mount = document.getElementById('cart-mount');
+
+    if (cart.length === 0) {
+      document.getElementById('cart-hero-desc').textContent = 'Your cart is currently empty';
+      mount.innerHTML = `
+        <div class="cart-empty">
+          <div class="cart-empty-icon">🛒</div>
+          <h2>Your cart is empty</h2>
+          <p>Add some amazing 3D printing supplies to get started!</p>
+          <a href="category.html" class="btn btn-primary btn-lg">Start Shopping</a>
+        </div>
+      `;
+      return;
+    }
+
+    document.getElementById('cart-hero-desc').textContent = `${cart.reduce((s,i)=>s+i.qty,0)} item${cart.reduce((s,i)=>s+i.qty,0)!==1?'s':''} in your cart`;
+
+    const subtotal  = getCartTotal();
+    const shipping  = subtotal >= 150 ? 0 : 12.95;
+    const tax       = subtotal * 0.13;
+    const total     = subtotal + shipping + tax;
+    const savedAmt  = cart.reduce((s, item) => {
+      const p = getProductById(item.id);
+      return s + (p ? (p.retailPrice - p.wholesalePrice) * item.qty : 0);
+    }, 0);
+
+    mount.innerHTML = `
+      <div class="cart-grid">
+        <!-- Cart Items -->
+        <div class="cart-items">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+            <h3 style="font-family:var(--font-body);font-size:1rem;font-weight:700;color:var(--gray-800)">Order Items (${cart.length})</h3>
+            <button onclick="clearAllCart()" style="background:none;border:none;font-size:0.78rem;color:var(--gray-400);cursor:pointer">Clear all</button>
+          </div>
+
+          ${cart.map(item => {
+            const product = getProductById(item.id);
+            const lineTotal = item.price * item.qty;
+            const saved = product ? (product.retailPrice - product.wholesalePrice) * item.qty : 0;
+            return `
+              <div class="cart-item" id="cart-item-${item.id}-${encodeURIComponent(item.variant)}">
+                <a href="product.html?id=${item.id}" class="cart-item-img">
+                  <img src="${item.image}" alt="${item.name}"
+                    onerror="this.src='https://picsum.photos/seed/${item.id}/200/200'">
+                </a>
+                <div class="cart-item-info">
+                  <div class="cart-item-brand">${item.brand}</div>
+                  <a href="product.html?id=${item.id}" class="cart-item-name" style="display:block">${item.name}</a>
+                  ${item.variant ? `<div class="cart-item-variant">Variant: ${item.variant}</div>` : ''}
+                  ${saved > 0 ? `<div style="font-size:0.72rem;color:var(--orange);margin-top:4px;font-weight:600">You save ${formatPrice(saved)}</div>` : ''}
+                  <div class="cart-item-controls">
+                    <div class="qty-control">
+                      <button onclick="cartUpdateQty(${item.id},'${item.variant}',-1)">−</button>
+                      <input type="number" value="${item.qty}" min="1"
+                        onchange="cartSetQty(${item.id},'${item.variant}',this.value)"
+                        style="width:52px;height:36px">
+                      <button onclick="cartUpdateQty(${item.id},'${item.variant}',1)">+</button>
+                    </div>
+                    <div style="text-align:right">
+                      <div class="cart-item-price">${formatPrice(lineTotal)}</div>
+                      <div style="font-size:0.72rem;color:var(--gray-400)">${formatPrice(item.price)} each</div>
+                    </div>
+                    <button class="cart-remove" onclick="cartRemove(${item.id},'${item.variant}')">✕ Remove</button>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+
+          <div style="margin-top:24px;padding:16px;background:var(--blue-bg);border-radius:var(--radius);border:1px solid var(--blue-light);font-size:0.85rem;color:var(--blue-dark)">
+            ${shipping === 0 ? '🎉 You qualify for <strong>free shipping</strong>!' : `📦 Add <strong>${formatPrice(150 - subtotal)}</strong> more to get <strong>free shipping</strong>`}
+          </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="order-summary">
+          <h3>Order Summary</h3>
+
+          <div class="summary-row"><span class="label">Subtotal (${cart.reduce((s,i)=>s+i.qty,0)} items)</span><span class="value">${formatPrice(subtotal)}</span></div>
+          ${savedAmt > 0 ? `<div class="summary-row"><span class="label" style="color:var(--orange)">Wholesale Savings</span><span class="value" style="color:var(--orange)">−${formatPrice(savedAmt)}</span></div>` : ''}
+          <div class="summary-row"><span class="label">Shipping</span><span class="value">${shipping === 0 ? '<span style="color:#22c55e;font-weight:600">FREE</span>' : formatPrice(shipping)}</span></div>
+          <div class="summary-row"><span class="label">Tax (HST 13%)</span><span class="value">${formatPrice(tax)}</span></div>
+
+          <div class="promo-input-row">
+            <input type="text" placeholder="Promo code" id="promo-input">
+            <button onclick="applyPromo()">Apply</button>
+          </div>
+
+          <div class="summary-row summary-total">
+            <span class="label">Total</span>
+            <span class="value">${formatPrice(total)}</span>
+          </div>
+
+          <button class="btn btn-primary btn-full btn-lg" style="margin-top:20px" onclick="proceedCheckout()">Proceed to Checkout →</button>
+          <a href="category.html" class="btn btn-outline btn-full" style="margin-top:10px">Continue Shopping</a>
+
+          <div style="margin-top:20px;display:flex;flex-direction:column;gap:6px;font-size:0.75rem;color:var(--gray-400)">
+            <div>🔒 256-bit SSL encrypted checkout</div>
+            <div>📦 Free shipping on orders over $150</div>
+            <div>🔄 30-day return policy</div>
+            <div>💳 Net-30 terms available</div>
+          </div>
+
+          <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--gray-200)">
+            <div style="font-size:0.72rem;color:var(--gray-400);margin-bottom:8px;text-align:center">We Accept</div>
+            <div style="display:flex;justify-content:center;gap:8px;font-size:1.2rem">💳 🏦 💰 📱</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function cartUpdateQty(id, variant, delta) {
+    const cart  = getCart();
+    const item  = cart.find(i => i.id === id && i.variant === variant);
+    if (!item) return;
+    const newQty = Math.max(1, item.qty + delta);
+    updateCartQty(id, variant, newQty);
+    renderCart();
+  }
+
+  function cartSetQty(id, variant, val) {
+    updateCartQty(id, variant, parseInt(val) || 1);
+    renderCart();
+  }
+
+  function cartRemove(id, variant) {
+    removeFromCart(id, variant);
+    renderCart();
+    showToast('Item removed from cart', 'info');
+  }
+
+  function clearAllCart() {
+    if (confirm('Remove all items from your cart?')) {
+      localStorage.removeItem('cic_cart');
+      updateCartBadge();
+      renderCart();
+    }
+  }
+
+  function applyPromo() {
+    const code = document.getElementById('promo-input').value.trim().toUpperCase();
+    if (code === 'MAKER10') showToast('Promo code applied! 10% off your order 🎉', 'success');
+    else if (code === 'CIC2025') showToast('Welcome promo applied! Free shipping added 🎉', 'success');
+    else showToast('Invalid promo code. Try MAKER10 or CIC2025', 'error');
+  }
+
+  function proceedCheckout() {
+    openModal();
+    showToast('Please log in or sign up to complete your order', 'info');
+  }
+
+  // Suggested products (featured, not in cart)
+  const cartIds = getCart().map(i => i.id);
+  const suggested = PRODUCTS.filter(p => !cartIds.includes(p.id) && p.isFeatured).slice(0, 4);
+  document.getElementById('suggested-grid').innerHTML = suggested.map(renderProductCard).join('');
+
+  // Initial render
+  renderCart();
+</script>
+</body>
+</html>

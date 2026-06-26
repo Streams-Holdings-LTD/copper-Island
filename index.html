@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Copper Island Collectables — 3D Printing Wholesale Marketplace</title>
+  <meta name="description" content="The wholesale marketplace for 3D printing supplies, filaments, resin, miniatures, and accessories. Join thousands of makers on Copper Island Collectables.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏝️</text></svg>">
+</head>
+<body>
+
+<!-- Header -->
+<div id="header-mount"></div>
+
+<!-- ================================================
+     HERO
+     ================================================ -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-badge">🏝️ Canada's 3D Printing Marketplace</div>
+        <h1>Where <span>Makers</span> Source Their Best Work</h1>
+        <p class="hero-desc">Wholesale pricing on 3D printers, premium filaments, resin supplies, hand-painted miniatures, and everything in between — all from vetted Canadian brands.</p>
+        <div class="hero-actions">
+          <a href="category.html" class="btn-hero-primary">Shop the Collection</a>
+          <a href="brands.html" class="btn-hero-secondary">Meet the Brands</a>
+        </div>
+        <div class="hero-stats">
+          <div>
+            <div class="hero-stat-num">500+</div>
+            <div class="hero-stat-label">Products</div>
+          </div>
+          <div>
+            <div class="hero-stat-num">7</div>
+            <div class="hero-stat-label">Curated Brands</div>
+          </div>
+          <div>
+            <div class="hero-stat-num">2,400+</div>
+            <div class="hero-stat-label">Happy Makers</div>
+          </div>
+          <div>
+            <div class="hero-stat-num">Net‑30</div>
+            <div class="hero-stat-label">Terms Available</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <img src="https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?w=700&h=400&fit=crop&auto=format" alt="3D Printer" loading="eager">
+          <div class="hero-card-label">🖨️ 3D Printers — From $189</div>
+        </div>
+        <div class="hero-card">
+          <img src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=350&h=300&fit=crop&auto=format" alt="Filaments" loading="eager">
+          <div class="hero-card-label">🎨 Filaments from $19</div>
+        </div>
+        <div class="hero-card">
+          <img src="https://images.unsplash.com/photo-1559532899-2c08a6e3c8ac?w=350&h=300&fit=crop&auto=format" alt="Miniatures" loading="eager">
+          <div class="hero-card-label">🏰 Miniatures from $39</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================
+     TRUST BAR
+     ================================================ -->
+<div style="background:var(--white);border-bottom:1px solid var(--gray-200)">
+  <div class="container">
+    <div style="display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:40px;padding:20px 0;font-size:0.875rem;color:var(--gray-500)">
+      <span>🇨🇦 <strong style="color:var(--gray-700)">Canadian Brands</strong></span>
+      <span>📦 <strong style="color:var(--gray-700)">Free Shipping</strong> over $150</span>
+      <span>💳 <strong style="color:var(--gray-700)">Net-30 Terms</strong> available</span>
+      <span>🔒 <strong style="color:var(--gray-700)">Secure Checkout</strong></span>
+      <span>⭐ <strong style="color:var(--gray-700)">4.8/5 avg rating</strong></span>
+      <span>🔄 <strong style="color:var(--gray-700)">30-day returns</strong></span>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================
+     SHOP BY CATEGORY
+     ================================================ -->
+<section class="section" style="background:var(--white)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-left">
+        <div class="section-eyebrow">Explore</div>
+        <h2 class="section-title">Shop by Category</h2>
+        <p class="section-desc">Everything a 3D printing maker needs, curated in one place</p>
+      </div>
+      <a href="category.html" class="see-all-link">Browse all products →</a>
+    </div>
+    <div class="categories-grid" id="categories-grid"></div>
+  </div>
+</section>
+
+<!-- ================================================
+     FEATURED BRANDS
+     ================================================ -->
+<section class="section" style="background:var(--blue-bg)">
+  <div class="container-wide">
+    <div class="section-header" style="padding:0 0 0 8px">
+      <div class="section-header-left">
+        <div class="section-eyebrow">Partners</div>
+        <h2 class="section-title">Featured Brands</h2>
+        <p class="section-desc">Trusted Canadian makers behind every product</p>
+      </div>
+      <a href="brands.html" class="see-all-link">See all brands →</a>
+    </div>
+    <div class="brands-scroll" id="brands-scroll"></div>
+  </div>
+</section>
+
+<!-- ================================================
+     FEATURED PRODUCTS
+     ================================================ -->
+<section class="section" style="background:var(--white)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-left">
+        <div class="section-eyebrow">Best Sellers</div>
+        <h2 class="section-title">Featured Products</h2>
+        <p class="section-desc">Top-rated items chosen by our maker community</p>
+      </div>
+      <a href="category.html" class="see-all-link">View all →</a>
+    </div>
+    <div class="products-grid" id="featured-products"></div>
+  </div>
+</section>
+
+<!-- ================================================
+     PROMO BANNER — Sell on CIC
+     ================================================ -->
+<section class="promo-banner">
+  <div class="container">
+    <div class="promo-inner">
+      <div class="promo-content">
+        <div class="section-eyebrow" style="color:rgba(255,255,255,0.7)">For Brands & Makers</div>
+        <h2>Sell Your 3D Printing Products on Copper Island</h2>
+        <p>Reach thousands of wholesale buyers across Canada. Set your own prices, get paid on Net-30 terms, and grow your brand with zero upfront cost.</p>
+        <button class="btn btn-lg" style="background:var(--white);color:var(--copper-dark)" onclick="openModal()">Apply to Sell →</button>
+      </div>
+      <div class="promo-features">
+        <div class="promo-feature"><div class="promo-feature-icon">🏪</div>Your own branded storefront</div>
+        <div class="promo-feature"><div class="promo-feature-icon">📊</div>Real-time analytics dashboard</div>
+        <div class="promo-feature"><div class="promo-feature-icon">💳</div>Net-30 payment terms</div>
+        <div class="promo-feature"><div class="promo-feature-icon">🔄</div>Automated reorder reminders</div>
+        <div class="promo-feature"><div class="promo-feature-icon">📦</div>Integrated shipping labels</div>
+        <div class="promo-feature"><div class="promo-feature-icon">🇨🇦</div>Proudly Canadian platform</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================
+     NEW ARRIVALS
+     ================================================ -->
+<section class="section" style="background:var(--blue-bg)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-left">
+        <div class="section-eyebrow">Just Arrived</div>
+        <h2 class="section-title">New Arrivals</h2>
+        <p class="section-desc">Fresh drops from our brands this month</p>
+      </div>
+      <a href="category.html?filter=new" class="see-all-link">See all new →</a>
+    </div>
+    <div class="products-grid" id="new-products"></div>
+  </div>
+</section>
+
+<!-- ================================================
+     HOW IT WORKS
+     ================================================ -->
+<section class="section how-it-works">
+  <div class="container">
+    <div class="section-header" style="justify-content:center;text-align:center;flex-direction:column;align-items:center">
+      <div class="section-eyebrow">Simple & Fast</div>
+      <h2 class="section-title">How Copper Island Works</h2>
+      <p class="section-desc" style="max-width:520px">From discovery to delivery — everything is built for wholesale buyers who value their time</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-icon">🔍</div>
+        <div class="step-number">1</div>
+        <h3>Discover Products</h3>
+        <p>Browse hundreds of 3D printing supplies from vetted Canadian brands. Filter by category, material, price, or brand.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">🛒</div>
+        <div class="step-number">2</div>
+        <h3>Order Wholesale</h3>
+        <p>Place orders at wholesale pricing with low minimums. Mix brands in a single checkout — one invoice, one shipment.</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">📦</div>
+        <div class="step-number">3</div>
+        <h3>Create & Resell</h3>
+        <p>Receive fast Canadian shipping. Use the supplies in your studio, resell in your shop, or stock up your makerspace.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================
+     TESTIMONIALS
+     ================================================ -->
+<section class="section" style="background:var(--blue-bg)">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-header-left">
+        <div class="section-eyebrow">Reviews</div>
+        <h2 class="section-title">What Makers Say</h2>
+      </div>
+    </div>
+    <div class="testimonials-grid" id="testimonials-grid"></div>
+  </div>
+</section>
+
+<!-- ================================================
+     NEWSLETTER
+     ================================================ -->
+<section class="newsletter-section">
+  <div class="container">
+    <div class="section-eyebrow" style="color:var(--copper-light)">Stay in the Loop</div>
+    <h2>Get Deals Before Everyone Else</h2>
+    <p>New products, restocks, exclusive discounts, and maker tips — straight to your inbox every two weeks.</p>
+    <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+      <input type="email" placeholder="Enter your email address" required>
+      <button type="submit">Subscribe</button>
+    </form>
+  </div>
+</section>
+
+<!-- Footer -->
+<div id="footer-mount"></div>
+
+<!-- Modal -->
+<div id="modal-mount"></div>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  // Init
+  initPage('home');
+
+  // Populate categories
+  document.getElementById('categories-grid').innerHTML = CATEGORIES.map(renderCategoryCard).join('');
+
+  // Populate brands scroll
+  document.getElementById('brands-scroll').innerHTML = BRANDS.map(renderBrandCard).join('');
+
+  // Populate featured products
+  const featured = getFeaturedProducts().slice(0, 8);
+  document.getElementById('featured-products').innerHTML = featured.map(renderProductCard).join('');
+
+  // Populate new products
+  const newProds = getNewProducts().slice(0, 4);
+  document.getElementById('new-products').innerHTML = newProds.map(renderProductCard).join('');
+
+  // Testimonials
+  document.getElementById('testimonials-grid').innerHTML = TESTIMONIALS.map(t => `
+    <div class="testimonial-card">
+      <div class="testimonial-stars">${'★'.repeat(t.rating)}</div>
+      <p class="testimonial-text">"${t.text}"</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">${t.initials}</div>
+        <div>
+          <div class="testimonial-name">${t.name}</div>
+          <div class="testimonial-role">${t.role}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  function handleNewsletter(e) {
+    e.preventDefault();
+    showToast('Thanks for subscribing! Check your inbox.', 'success');
+    e.target.reset();
+  }
+</script>
+</body>
+</html>
