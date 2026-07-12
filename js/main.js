@@ -128,6 +128,7 @@ function switchModalTab(tab) {
 
 // ---- RENDER: PRODUCT CARD ----
 function renderProductCard(product) {
+  const affiliateUrl = getProductAffiliateUrl(product);
   const wish = getWishlist().includes(product.id);
   return `
     <a href="product.html?id=${product.id}" class="product-card">
@@ -153,11 +154,20 @@ function renderProductCard(product) {
         </div>
       </div>
       <div class="product-card-footer">
-        <span class="min-order">Min. ${product.minOrder} unit${product.minOrder > 1 ? 's' : ''}</span>
-        <button class="btn-add-cart" onclick="event.preventDefault(); addToCart(${product.id}, 1)">+ Add</button>
+        <span class="min-order">${product.retailer || 'Copper Island'}</span>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn-add-cart" onclick="event.preventDefault(); addToCart(${product.id}, 1)">+ Add</button>
+          <a class="btn-add-cart" href="${affiliateUrl}" target="_blank" rel="sponsored noopener" onclick="event.preventDefault(); event.stopPropagation(); window.open('${affiliateUrl}', '_blank', 'noopener');">Amazon ↗</a>
+        </div>
       </div>
     </a>
   `;
+}
+
+function getProductAffiliateUrl(product) {
+  if (product?.amazonUrl) return product.amazonUrl;
+  if (!product?.name) return '#';
+  return buildAmazonAffiliateUrl(`${product.name} 3d printing`);
 }
 
 // ---- RENDER: BRAND CARD ----

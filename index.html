@@ -256,12 +256,18 @@
   // Populate brands scroll
   document.getElementById('brands-scroll').innerHTML = BRANDS.map(renderBrandCard).join('');
 
-  // Populate featured products
-  const featured = getFeaturedProducts().slice(0, 8);
+  // Populate featured products (prioritize newest IDs so recent catalog adds are visible)
+  const featured = getFeaturedProducts()
+    .slice()
+    .sort((a, b) => b.id - a.id)
+    .slice(0, 8);
   document.getElementById('featured-products').innerHTML = featured.map(renderProductCard).join('');
 
-  // Populate new products
-  const newProds = getNewProducts().slice(0, 4);
+  // Populate new products (show most recently added new items first)
+  const newProds = getNewProducts()
+    .slice()
+    .sort((a, b) => b.id - a.id)
+    .slice(0, 4);
   document.getElementById('new-products').innerHTML = newProds.map(renderProductCard).join('');
 
   // Testimonials

@@ -4,6 +4,12 @@
 
 const SITE_NAME = "Copper Island Collectables";
 const SITE_URL  = "https://copperislandcollectables.com";
+const AMAZON_AFFILIATE_TAG = "createlab09-20";
+
+function buildAmazonAffiliateUrl(query) {
+  const encoded = encodeURIComponent(query);
+  return `https://www.amazon.com/s?k=${encoded}&tag=${AMAZON_AFFILIATE_TAG}`;
+}
 
 // ---------- CATEGORIES ----------
 const CATEGORIES = [
@@ -665,8 +671,192 @@ const PRODUCTS = [
     reviews: [
       { name: "Marie L.", date: "May 2025", rating: 5, text: "Replaced both my separate wash and cure stations. Faster, tidier, and the prints come out better. Worth the upgrade." }
     ]
+  },
+
+  // --- NEW ARRIVALS: PRINTERS ---
+  {
+    id: 21, name: "A1 Mini Combo — Multi-Color FDM Printer", brandId: 2, brand: "MakerVault",
+    category: "printers", categoryName: "3D Printers",
+    wholesalePrice: 319.99, retailPrice: 459.99, minOrder: 1,
+    rating: 4.8, reviewCount: 142, inStock: true, isNew: true, isFeatured: true,
+    tags: ["FDM", "multi-color", "beginner", "high-speed"],
+    sku: "MV-A1MC",
+    image: "https://picsum.photos/seed/a1mini-combo/600/450",
+    images: ["https://picsum.photos/seed/a1mini-combo/700/520"],
+    desc: "Compact high-speed printer with automatic flow calibration and multi-color module support. Great for makers who want quality and speed without complex setup.",
+    specs: {
+      "Build Volume": "180 × 180 × 180 mm",
+      "Max Speed": "Up to 500 mm/s",
+      "Nozzle Temp": "Up to 300 °C",
+      "Auto Levelling": "Yes",
+      "Connectivity": "WiFi, USB"
+    },
+    variants: ["Combo", "Printer Only"],
+    reviews: [
+      { name: "Noah C.", date: "Jun 2025", rating: 5, text: "Super easy setup and clean prints from day one. Multi-color support is a huge plus." }
+    ]
+  },
+  {
+    id: 22, name: "Saturn-Class 12K Resin Printer", brandId: 3, brand: "ResinArt Studio",
+    category: "printers", categoryName: "3D Printers",
+    wholesalePrice: 429.99, retailPrice: 589.99, minOrder: 1,
+    rating: 4.9, reviewCount: 97, inStock: true, isNew: true, isFeatured: true,
+    tags: ["resin", "12K", "MSLA", "miniatures"],
+    sku: "RA-S12K",
+    image: "https://picsum.photos/seed/saturn12k/600/450",
+    images: ["https://picsum.photos/seed/saturn12k/700/520"],
+    desc: "Large-format 12K resin printer with ultra-fine detail and improved light uniformity for crisp miniature and model production.",
+    specs: {
+      "Build Volume": "218 × 123 × 250 mm",
+      "Screen": "10" 12K Mono LCD",
+      "XY Resolution": "19 × 24 μm",
+      "Light Source": "COB + Fresnel",
+      "Connectivity": "USB"
+    },
+    variants: ["Black"],
+    reviews: []
+  },
+
+  // --- NEW ARRIVALS: FILAMENTS ---
+  {
+    id: 23, name: "Matte PLA Pro — 1kg", brandId: 1, brand: "PrintCraft Pro",
+    category: "filaments", categoryName: "Filaments",
+    wholesalePrice: 21.99, retailPrice: 31.99, minOrder: 3,
+    rating: 4.7, reviewCount: 154, inStock: true, isNew: true, isFeatured: false,
+    tags: ["PLA", "matte", "1.75mm"],
+    sku: "PC-MPLA1K",
+    image: "https://picsum.photos/seed/matte-pla/600/450",
+    images: ["https://picsum.photos/seed/matte-pla/700/520"],
+    desc: "Low-sheen matte PLA for premium cosmetic finish on props, models, and product prototypes.",
+    specs: {
+      "Diameter": "1.75 mm ± 0.02 mm",
+      "Weight": "1 kg",
+      "Print Temp": "195 – 220 °C",
+      "Bed Temp": "0 – 55 °C",
+      "Finish": "Matte"
+    },
+    variants: ["Charcoal", "Bone White", "Olive", "Sandstone"],
+    reviews: []
+  },
+  {
+    id: 24, name: "PETG-CF Carbon Fiber Blend — 1kg", brandId: 6, brand: "FusionFilament Co",
+    category: "filaments", categoryName: "Filaments",
+    wholesalePrice: 33.99, retailPrice: 49.99, minOrder: 2,
+    rating: 4.8, reviewCount: 88, inStock: true, isNew: true, isFeatured: true,
+    tags: ["PETG", "carbon fiber", "engineering"],
+    sku: "FF-PETGCF1K",
+    image: "https://picsum.photos/seed/petg-cf/600/450",
+    images: ["https://picsum.photos/seed/petg-cf/700/520"],
+    desc: "Carbon fiber reinforced PETG for rigid functional parts with improved dimensional stability and low warp behavior.",
+    specs: {
+      "Diameter": "1.75 mm ± 0.03 mm",
+      "Weight": "1 kg",
+      "Print Temp": "240 – 265 °C",
+      "Bed Temp": "70 – 90 °C",
+      "Nozzle": "Hardened steel recommended"
+    },
+    variants: ["Black CF", "Grey CF"],
+    reviews: [
+      { name: "Ivy G.", date: "Jun 2025", rating: 5, text: "Perfect for jigs and brackets. Very strong and prints cleaner than I expected." }
+    ]
+  },
+
+  // --- NEW ARRIVALS: RESIN ---
+  {
+    id: 25, name: "ABS-Like Pro Resin — 1L", brandId: 3, brand: "ResinArt Studio",
+    category: "resin", categoryName: "Resin & UV",
+    wholesalePrice: 36.99, retailPrice: 54.99, minOrder: 2,
+    rating: 4.8, reviewCount: 123, inStock: true, isNew: true, isFeatured: false,
+    tags: ["resin", "ABS-like", "impact-resistant"],
+    sku: "RA-ABSP1L",
+    image: "https://picsum.photos/seed/abslike-resin/600/450",
+    images: ["https://picsum.photos/seed/abslike-resin/700/520"],
+    desc: "Durable ABS-like resin tuned for tougher prototypes and snap-fit parts with lower brittleness compared to standard resin.",
+    specs: {
+      "Volume": "1 L",
+      "Wavelength": "405 nm",
+      "Shore Hardness": "82D",
+      "Elongation at Break": "28%",
+      "Colour": "Grey"
+    },
+    variants: ["Grey", "Black", "White"],
+    reviews: []
+  },
+
+  // --- NEW ARRIVALS: PARTS ---
+  {
+    id: 26, name: "PEI Spring Steel Build Plate — 235×235", brandId: 4, brand: "TinkerForge Parts",
+    category: "parts", categoryName: "Parts & Components",
+    wholesalePrice: 19.99, retailPrice: 29.99, minOrder: 4,
+    rating: 4.7, reviewCount: 166, inStock: true, isNew: true, isFeatured: false,
+    tags: ["PEI", "build plate", "upgrade"],
+    sku: "TF-PEI235",
+    image: "https://picsum.photos/seed/pei-sheet/600/450",
+    images: ["https://picsum.photos/seed/pei-sheet/700/520"],
+    desc: "Double-sided textured/smooth PEI spring steel plate with magnetic base for excellent adhesion and easy part removal.",
+    specs: {
+      "Plate Size": "235 × 235 mm",
+      "Surface": "Textured + Smooth PEI",
+      "Thickness": "0.5 mm steel",
+      "Max Temp": "120 °C",
+      "Compatibility": "Ender style 235 mm beds"
+    },
+    variants: ["Plate + Magnet", "Plate Only"],
+    reviews: []
+  },
+  {
+    id: 27, name: "Dry Box Filament Dryer — Dual Spool", brandId: 7, brand: "BuildRight Tools",
+    category: "tools", categoryName: "Tools & Accessories",
+    wholesalePrice: 49.99, retailPrice: 74.99, minOrder: 2,
+    rating: 4.6, reviewCount: 109, inStock: true, isNew: true, isFeatured: false,
+    tags: ["filament dryer", "storage", "PETG", "nylon"],
+    sku: "BR-DRY2",
+    image: "https://picsum.photos/seed/filament-dryer/600/450",
+    images: ["https://picsum.photos/seed/filament-dryer/700/520"],
+    desc: "Dual-spool filament dryer with adjustable temperature, timer, and pass-through ports for printing directly while drying.",
+    specs: {
+      "Capacity": "2 spools",
+      "Temperature": "45 – 70 °C",
+      "Timer": "Up to 48 hours",
+      "Display": "Digital",
+      "Input": "100–240V"
+    },
+    variants: ["Black"],
+    reviews: [
+      { name: "Riley D.", date: "Jun 2025", rating: 5, text: "PETG and nylon prints are way more consistent now. Great addition to my setup." }
+    ]
+  },
+  {
+    id: 28, name: "0.2mm Precision Nozzle Set — 5pc", brandId: 4, brand: "TinkerForge Parts",
+    category: "parts", categoryName: "Parts & Components",
+    wholesalePrice: 11.99, retailPrice: 18.99, minOrder: 5,
+    rating: 4.5, reviewCount: 73, inStock: true, isNew: true, isFeatured: false,
+    tags: ["nozzle", "0.2mm", "miniatures", "detail"],
+    sku: "TF-NZ02-5",
+    image: "https://picsum.photos/seed/nozzle-02/600/450",
+    images: ["https://picsum.photos/seed/nozzle-02/700/520"],
+    desc: "Fine-detail brass nozzle set for miniature and high-resolution prints with sharper corners and cleaner small features.",
+    specs: {
+      "Nozzle Size": "0.2 mm",
+      "Material": "Brass",
+      "Thread": "MK8",
+      "Pack Qty": "5",
+      "Recommended Layer": "0.08 – 0.16 mm"
+    },
+    variants: ["5-Pack"],
+    reviews: []
   }
 ];
+
+// Map most catalog items to Amazon affiliate listings while keeping existing
+// on-site merchandising data intact for browsing and filters.
+const AMAZON_PRODUCT_IDS = new Set(PRODUCTS.map((product) => product.id));
+
+PRODUCTS.forEach((product) => {
+  if (!AMAZON_PRODUCT_IDS.has(product.id)) return;
+  product.retailer = "Amazon";
+  product.amazonUrl = buildAmazonAffiliateUrl(`${product.name} 3d printing`);
+});
 
 // ---------- TESTIMONIALS ----------
 const TESTIMONIALS = [
