@@ -236,7 +236,7 @@ function getHeaderHTML(activePage) {
     <header class="site-header" id="site-header">
       <div class="header-top">
         <a href="index.html" class="header-logo">
-          <div class="logo-icon">🏝️</div>
+          <img src="copperlogo.png" alt="Copper Island logo" class="logo-icon" loading="eager">
           <div>
             <div class="logo-text">Copper Island</div>
             <div class="logo-sub">Collectables</div>
@@ -269,7 +269,7 @@ function getFooterHTML() {
         <div class="footer-grid">
           <div class="footer-brand">
             <a href="index.html" class="header-logo footer-logo" style="margin-bottom:16px;display:inline-flex">
-              <div class="logo-icon">🏝️</div>
+              <img src="copperlogo.png" alt="Copper Island logo" class="logo-icon" loading="lazy">
               <div>
                 <div class="logo-text">Copper Island</div>
                 <div class="logo-sub">Collectables</div>
@@ -338,7 +338,7 @@ function getModalHTML() {
     <div class="modal-overlay" id="login-modal" onclick="handleModalOverlayClick(event)">
       <div class="modal">
         <button class="modal-close" onclick="closeModal()">✕</button>
-        <div class="modal-logo" style="font-size:2rem">🏝️</div>
+        <div class="modal-logo"><img src="copperlogo.png" alt="Copper Island logo" class="modal-logo-img" loading="lazy"></div>
         <h2 style="text-align:center">Copper Island</h2>
         <p style="text-align:center">Wholesale pricing for serious makers</p>
         <div class="modal-tabs">
